@@ -107,6 +107,28 @@ public class GeoTiffAnimation {
         }
         return menuList;
     }
+    
+    public Map<String, String> getListParameters() {
+        StringBuilder result = new StringBuilder("");
+
+        Map<String, String> menuList = new HashMap<>();
+        //Get file from resources folder
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("/conf/parameterRetrieve.list").getFile());
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                result.append(line).append(",");
+                menuList.put(line, line);
+            }
+            scanner.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return menuList;
+    }
 
     public String getSelectedGRDH() {
         return selectedGRDH;

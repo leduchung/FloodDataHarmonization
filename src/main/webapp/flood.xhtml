@@ -18,29 +18,7 @@
                 <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-2,ui-grid-col-1, ui-grid-col-10"  >
                     <p:outputPanel>
                         <div id="frameNumber"></div>
-                        <p:panelGrid columns="3"  layout="grid" styleClass="ui-panelgrid-blank" >
-                            <!--<p:commandButton value="&lt;&lt;" onclick="showBack();"/>-->
-                            <!--<p:commandButton value="Auto" onclick="toggleAuto();" id="autoButton"/>-->
-                            <!--<p:commandButton value="&gt;&gt;" onclick="showNext();"/>-->
-                            <p:outputPanel>
-                                <button onclick="showBack()">&lt;&lt;</button></p:outputPanel>
-                            <p:outputPanel>
-                                <button id="autoButton" onclick="toggleAuto()">Auto</button>
-                            </p:outputPanel>
-                            <p:outputPanel>
-                                <button onclick="showNext()">&gt;&gt;</button>
-                            </p:outputPanel>
-                        </p:panelGrid>
-                        <!--  CONTROl -->
-                        <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
-                            <p:outputLabel value="Speed" />
-                            <p:panelGrid columns="3"  layout="grid" styleClass="ui-panelgrid-blank" >
-                                <p:outputPanel><input type="radio" name="speed" id="speed_slow" onclick="changeSpeed();" value="Slow" >S</input></p:outputPanel>
-                                <p:outputPanel><input type="radio" name="speed" id="speed_med" onclick="changeSpeed();" value="Medium" >M</input></p:outputPanel>
-                                <p:outputPanel><input type="radio" name="speed" id="speed_fast" onclick="changeSpeed();" value="Fast" >F</input></p:outputPanel>
-                            </p:panelGrid>
-                        </p:panelGrid>
-
+                       
                         <!--  SELECT PROCESSED -->
 
                         <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
@@ -81,26 +59,27 @@
                                 </p:panelGrid>
                                 <p:commandButton value="Composite" onclick="showComposite();" />
                             </p:panelGrid>
+                            
+                            <!-- parameter retrieve -->
+                            <!--<p:outputLabel value="Parameter retrieve" />-->
+                            <hr />
+                            <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                <p:outputLabel value="Parameter retrieve" />
+                                <p:selectOneMenu widgetVar="parameterSelect" value="#{TiffAnimation.selectedGRDH}" effect="fold" editable="false" onchange="clickParameter();">
+                                    <f:selectItem itemLabel="Select One" itemValue="" />
+                                    <f:selectItems value="#{TiffAnimation.listParameters}" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
 
                             <hr />
                             <!-- Products -->
-                            <p:outputLabel value="Products" />
+                            <!--<p:outputLabel value="Products" />-->
                             <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
                                 <p:outputLabel value="Water body" />
                                 <p:selectOneMenu widgetVar="waterbodySelect" value="#{TiffAnimation.selectedGRDH}" effect="fold" editable="false" onchange="clickWaterBody();">
                                     <f:selectItem itemLabel="Select One" itemValue="" />
                                     <f:selectItems value="#{TiffAnimation.listWaterBody}" />
                                 </p:selectOneMenu>
-                            </p:panelGrid>
-
-                            <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
-
-
-
-                                <p:outputPanel><input type="radio" name="data" id="processed_data" onclick="#" value="1" >Processed data</input></p:outputPanel>
-                                <p:outputPanel><input type="radio" name="data" id="colored_data" onclick="#" value="2" >Color composite</input></p:outputPanel>
-                                <p:outputPanel><input type="radio" name="data" id="water_data" onclick="#" value="3" >Water body</input></p:outputPanel>
-                                <p:outputPanel><input type="radio" name="data" id="flood_data" onclick="#" value="4" >Flood</input></p:outputPanel>
                             </p:panelGrid>
                         </p:panelGrid>
 
@@ -118,7 +97,7 @@
                 </p:panelGrid>
                 <script>
 
-                            var wwd = new WorldWind.WorldWindow("canvasOne");
+                    var wwd = new WorldWind.WorldWindow("canvasOne");
 
                     // Add some image layers to the World Window's globe.
                     wwd.addLayer(new WorldWind.BMNGOneImageLayer());
@@ -241,6 +220,13 @@
                         var tiffFile = PF('waterbodySelect').getSelectedValue();
                         var tiffURL = "#{TiffAnimation.endpoint}" + "data/flood/qlook_100m/GRDH_Mosaicing_WATER/org/" + tiffFile;
                         console.log("selectWaterbody URL: " + tiffURL);
+                        showFrame(tiffURL);
+                    }
+                    
+                    function clickParameter() {
+                        var tiffFile = PF('parameterSelect').getSelectedValue();
+                        var tiffURL = "#{TiffAnimation.endpoint}" + "data/flood/qlook_100m/GRDH_Mocaicing_PARAMETERS_new/" + tiffFile;
+                        console.log("select parameters URL: " + tiffURL);
                         showFrame(tiffURL);
                     }
 

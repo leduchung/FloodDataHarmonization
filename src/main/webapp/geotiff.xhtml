@@ -82,7 +82,7 @@
 
                     var geotiffLayer;
                     function showFrame() {
-                        document.getElementById('frameNumber').innerHTML = "Frame: " + currentIndex + "/" + (tiffs.length - 1);
+                        document.getElementById('frameNumber').innerHTML = "Date: " + (currentIndex + 1) + " July 2016";
                         var tiffURL = "#{TiffAnimation.endpoint}" + "data/spartacus_trans/" + tiffs[currentIndex];
                         console.log("Load tiff: " + tiffURL);
                         var aGeotiffObject = new WorldWind.GeoTiffReader(tiffURL);

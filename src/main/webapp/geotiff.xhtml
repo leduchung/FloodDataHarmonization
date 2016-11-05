@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <script src="js/go-debug.js"></script>
+        <script src="js/worldwindlib.js" type="text/javascript"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="layout.xhtml">
+            <ui:define name="content"> 
+                <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-2,ui-grid-col-1, ui-grid-col-10"  >
+                    <p:outputPanel>
+                        <div id="frameNumber"></div>
+                        <p:panelGrid columns="3"  layout="grid" styleClass="ui-panelgrid-blank" >
+                            <!--<p:commandButton value="&lt;&lt;" onclick="showBack();"/>-->
+                            <!--<p:commandButton value="Auto" onclick="toggleAuto();" id="autoButton"/>-->
+                            <!--<p:commandButton value="&gt;&gt;" onclick="showNext();"/>-->
+                            <p:outputPanel>
+                                <button onclick="showBack()">&lt;&lt;</button></p:outputPanel>
+                            <p:outputPanel>
+                                <button id="autoButton" onclick="toggleAuto()">Auto</button>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <button onclick="showNext()">&gt;&gt;</button>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <!--                        <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                                    <input type="radio" name="showFormat" id="trans" value="trans" />
+                                                    <input type="radio" name="showFormat" id="notrans" value="notrans" />
+                                                </p:panelGrid>-->
+
+                        <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                            <p:outputLabel value="Speed" />
+                            <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                <p:outputPanel><input type="radio" name="speed" id="speed_slow" onclick="changeSpeed();" value="Slow" >Slow</input></p:outputPanel>
+                                <p:outputPanel><input type="radio" name="speed" id="speed_med" onclick="changeSpeed();" value="Medium" >Medium</input></p:outputPanel>
+                                <p:outputPanel><input type="radio" name="speed" id="speed_fast" onclick="changeSpeed();" value="Fast" >Fast</input></p:outputPanel>
+                            </p:panelGrid>
+                        </p:panelGrid>
+                    </p:outputPanel>
+
+                    <div  style="position: relative; top: 50px; left: 50px;">
+                        <!-- Create a canvas for Web World Wind. -->
+                        <canvas id="canvasOne" width="1000" height="550">
+                            Your browser does not support HTML5 Canvas.
+                        </canvas>
+                    </div>
+                </p:panelGrid>
+                <script>
+
+                    var wwd = new WorldWind.WorldWindow("canvasOne");
+
+                    // Add some image layers to the World Window's globe.
+                    wwd.addLayer(new WorldWind.BMNGOneImageLayer());
+                    wwd.addLayer(new WorldWind.BingAerialWithLabelsLayer());
+
+                    // Add a compass, a coordinates display and some view controls to the World Window.
+                    wwd.addLayer(new WorldWind.CompassLayer());
+                    wwd.addLayer(new WorldWind.CoordinatesDisplayLayer(wwd));
+                    wwd.addLayer(new WorldWind.ViewControlsLayer(wwd));
+
+                    // Create a layer manager for controlling layer visibility.
+//                    var layerManger = new LayerManager(wwd);
+
+                    var tiffsString = "#{TiffAnimation.listOfTiff}";
+                    console.log("List of file: " + tiffsString);
+                    var tiffs = tiffsString.split(",");
+//
+                    var geotiffObjects = [];
+//                    var geotiffLayers = [];
+                    wwd.redraw();
+                    wwd.goTo(new WorldWind.Position(47.7452410, 13.3812139, 700000));
+
+                    var currentIndex = 0;
+
+                    var geotiffLayer;
+                    function showFrame() {
+                        document.getElementById('frameNumber').innerHTML = "Frame: " + currentIndex + "/" + (tiffs.length - 1);
+                        var tiffURL = "#{TiffAnimation.endpoint}" + "data/spartacus_trans/" + tiffs[currentIndex];
+                        console.log("Load tiff: " + tiffURL);
+                        var aGeotiffObject = new WorldWind.GeoTiffReader(tiffURL);
+                        geotiffObjects.push(aGeotiffObject);
+
+                        aGeotiffObject.readAsImage(function (canvas) {
+                            var surfaceGeoTiff = new WorldWind.SurfaceImage(
+                                    aGeotiffObject.metadata.bbox,
+                                    new WorldWind.ImageSource(canvas)
+                                    );
+                            wwd.removeLayer(geotiffLayer); // remove last layer
+                            geotiffLayer = new WorldWind.RenderableLayer("GeoTiff");
+                            geotiffLayer.addRenderable(surfaceGeoTiff);
+                            wwd.addLayer(geotiffLayer);
+                            wwd.redraw();
+                        });
+
+                        // hard code for the events                       
+                        var eventURL = "#{TiffAnimation.endpoint}" + "data/events/13.tif";
+                        var eventObject = new WorldWind.GeoTiffReader(eventURL);
+                        var eventLayer = null;
+
+                        if (eventLayer !== null) {
+                            wwwd.removeLayer(eventLayer);
+                        }
+                        if (currentIndex === 13 || currentIndex === 14) {
+                            eventObject.readAsImage(function (canvas) {
+                                var surfaceGeoTiff = new WorldWind.SurfaceImage(
+                                        aGeotiffObject.metadata.bbox,
+                                        new WorldWind.ImageSource(canvas)
+                                        );
+                                wwd.removeLayer(geotiffLayer); // remove last layer
+                                eventLayer = new WorldWind.RenderableLayer("GeoTiff");
+                                eventLayer.addRenderable(surfaceGeoTiff);
+                                wwd.addLayer(eventLayer);
+                            });
+                        }
+
+                        wwd.redraw();
+                    }
+
+                    function showNext() {
+                        currentIndex = ++currentIndex % tiffs.length;
+                        showFrame();
+                    }
+
+                    function showBack() {
+                        if (currentIndex === 0) {
+                            currentIndex = tiffs.length + 1;
+                        }
+                        currentIndex = --currentIndex % tiffs.length;
+                        showFrame();
+                    }
+
+                    var interval;
+                    var isAutomatic = false;
+                    var speed = 2000;
+
+                    function toggleAuto() {
+                        if (isAutomatic === true) {
+                            console.log("Auto is clicked. isAutomatic is: " + isAutomatic);
+                            if (interval !== null) {
+                                clearInterval(interval);
+                                isAutomatic = false;
+                            }
+                            document.getElementById('autoButton').innerHTML = "Auto";
+                        } else {
+                            console.log("Auto is clicked. isAutomatic is: " + isAutomatic);
+                            isAutomatic = true;
+                            interval = setInterval(function () {
+                                showNext();
+                            }, speed);
+                            document.getElementById('autoButton').innerHTML = "Stop";
+                        }
+                        console.log("Auto is over. isAutomatic is: " + isAutomatic);
+                    }
+
+                    function changeSpeed() {
+
+                        if (document.getElementById('speed_slow').checked) {
+                            speed = 3000;
+                        } else if (document.getElementById('speed_med').checked) {
+                            speed = 1500;
+                        } else if (document.getElementById('speed_fast').checked) {
+                            speed = 300;
+                        }
+                        if (isAutomatic === true) {
+                            clearInterval(interval);
+                            interval = setInterval(function () {
+                                showNext();
+                            }, speed);
+                        }
+                    }
+
+
+                    ///////////////////////
+                    // SHAPE FILE
+                    ///////////////////////
+
+                    // Set up the common placemark attributes.
+//                    var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
+//                    placemarkAttributes.imageScale = 0.025;
+//                    placemarkAttributes.imageColor = WorldWind.Color.WHITE;
+//                    placemarkAttributes.labelAttributes.offset = new WorldWind.Offset(
+//                            WorldWind.OFFSET_FRACTION, 0.5,
+//                            WorldWind.OFFSET_FRACTION, 1.0);
+//                    placemarkAttributes.imageSource = "# {TiffAnimation.mainAppURL}" + "/data/white-dot.png";
+//                    var shapeConfigurationCallback = function (attributes, record) {
+//                        var configuration = {};
+//                        configuration.name = attributes.values.name || attributes.values.Name || attributes.values.NAME;
+//
+//                        if (record.isPointType()) {
+//                            configuration.name = attributes.values.name || attributes.values.Name || attributes.values.NAME;
+//
+//                            configuration.attributes = new WorldWind.PlacemarkAttributes(placemarkAttributes);
+//
+//                            if (attributes.values.pop_max) {
+//                                var population = attributes.values.pop_max;
+//                                configuration.attributes.imageScale = 0.01 * Math.log(population);
+//                            }
+//                        } else if (record.isPolygonType()) {
+//                            configuration.attributes = new WorldWind.ShapeAttributes(null);
+//
+//                            // Fill the polygon with a random pastel color.
+//                            configuration.attributes.interiorColor = new WorldWind.Color(
+//                                    0.375 + 0.5 * Math.random(),
+//                                    0.375 + 0.5 * Math.random(),
+//                                    0.375 + 0.5 * Math.random(),
+//                                    1.0);
+//
+//                            // Paint the outline in a darker variant of the interior color.
+//                            configuration.attributes.outlineColor = new WorldWind.Color(
+//                                    0.5 * configuration.attributes.interiorColor.red,
+//                                    0.5 * configuration.attributes.interiorColor.green,
+//                                    0.5 * configuration.attributes.interiorColor.blue,
+//                                    1.0);
+//                        }
+//
+//                        return configuration;
+//                    };
+//
+//                    function showShapeAnnotation() {
+//                        var worldLayer = new WorldWind.RenderableLayer("highlight1");
+//                        var worldShapefile = new WorldWind.Shapefile("# {TiffAnimation.shapeFile1}");
+//                        worldShapefile.load(null, shapeConfigurationCallback, worldLayer);
+//                        wwd.addLayer(worldLayer);
+//                    }
+//                    showShapeAnnotation();
+
+
+                </script>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

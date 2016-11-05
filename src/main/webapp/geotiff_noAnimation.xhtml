@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <script src="js/go-debug.js"></script>
+        <script src="js/worldwindlib.js" type="text/javascript"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="layout.xhtml">
+            <ui:define name="content">  
+                <div  style="position: relative; top: 50px; left: 50px;">
+                    <!-- Create a canvas for Web World Wind. -->
+                    <canvas id="canvasOne" width="1000" height="550">
+                        Your browser does not support HTML5 Canvas.
+                    </canvas>
+                </div>
+                <script>
+
+                    var wwd = new WorldWind.WorldWindow("canvasOne");
+
+                    // Add some image layers to the World Window's globe.
+                    wwd.addLayer(new WorldWind.BMNGOneImageLayer());
+                    wwd.addLayer(new WorldWind.BingAerialWithLabelsLayer());
+
+                    // Add a compass, a coordinates display and some view controls to the World Window.
+                    wwd.addLayer(new WorldWind.CompassLayer());
+                    wwd.addLayer(new WorldWind.CoordinatesDisplayLayer(wwd));
+                    wwd.addLayer(new WorldWind.ViewControlsLayer(wwd));
+
+//                    var resourcesUrl = "http://localhost:8080/FloodDataHarmonization-1.0/data/spartacus_trans/SPARTACUS_RR_2016-07-01_rgb.tif";
+                     var resourcesUrl = "http://localhost:8080/FloodDataHarmonization-1.0/data/flood/qlook_100m/GRDH_Mocaicing_PARAMETERS_new/Minimum_SIG0_VV_20160101_20161103.tif";
+
+
+                    console.log("resourceURL: " + resourcesUrl);
+                    var geotiffObject = new WorldWind.GeoTiffReader(resourcesUrl);
+                    console.log("geotiffObject" + geotiffObject);
+
+                    var geoTiffImage = geotiffObject.readAsImage(function (canvas) {
+                        var surfaceGeoTiff = new WorldWind.SurfaceImage(
+                                geotiffObject.metadata.bbox,
+                                new WorldWind.ImageSource(canvas)
+                                );
+                        console.log("surface: " + surfaceGeoTiff);
+
+                        var geotiffLayer = new WorldWind.RenderableLayer("GeoTiff");
+                        geotiffLayer.addRenderable(surfaceGeoTiff);
+                        wwd.addLayer(geotiffLayer);
+                        console.log("wwd" + wwd);
+
+//                        wwd.goTo(new WorldWind.Position(47.7452410, 13.3812139, 700000));
+                        wwd.goTo(new WorldWind.Position(10.3033320, 105.6798860, 55000));
+                    });
+
+
+
+
+
+                </script>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

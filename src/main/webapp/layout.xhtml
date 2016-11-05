@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      >
+
+    <h:head>
+        <style tyle="text/css">
+            .ui-layout-unit .ui-layout-unit-content {
+                overflow: hidden !important;
+            }
+
+            .ui-layout-unit{
+                border: none;
+            }
+
+        </style>
+        <title>Flood Data Harmonization</title>
+        <script type="text/javascript">
+            window.onerror = function (msg, url, linenumber) {
+                alert('Error message: ' + msg + '\nURL: ' + url + '\nLine Number: ' + linenumber + "\nStack:\n" + new Error().stack);
+                return true;
+            };
+        </script>
+
+        <script src="js/go-debug.js"></script>
+        <script src="js/worldwindlib.js" type="text/javascript"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    </h:head>
+
+    <h:body>
+        <p:layout fullPage="true">
+            <p:layoutUnit styleClass="noScrolllayoutUnit" position="north" style="text-align:center; border: none; overflow: hidden;">
+                <span class='nostyle' style="font-size: 130%; font-weight: bold"><u>F</u>lood <u>D</u>ata <u>H</u>armonization</span>
+                
+                <p:tabMenu activeIndex="#{param.i}" style="border: 0px;">
+                    <p:menuitem value="Request and navigation" url="index.xhtml?i=0" icon="ui-icon-search">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Precipitation highlight" url="geotiff.xhtml?i=1" icon="ui-icon-document">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Flood monitoring" url="flood.xhtml?i=2" icon="ui-icon-star">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+
+<!--                    <p:menuitem value="Testing" url="geotiff_noAnimation.xhtml?i=3" icon="ui-icon-document">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>-->
+
+                </p:tabMenu>
+
+            </p:layoutUnit>
+
+
+
+            <p:layoutUnit position="center">
+                <ui:insert name="content">Put default content here, if any.</ui:insert>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" style="text-align:center;">
+                <h:outputText value="© Copernicus Hackathon 2016" />
+            </p:layoutUnit>
+
+        </p:layout>
+
+    </h:body>
+
+</html>

@@ -1,0 +1,3 @@
+AOI_rectangle:
+minX, maxX, minY, maxY -> South, North, West, East
+(105.4298856479806, 105.9298856479806, 10.053332251486975, 10.553332251486975)

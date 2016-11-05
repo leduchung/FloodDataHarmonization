@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <script src="js/go-debug.js"></script>
+        <script src="js/worldwindlib.js" type="text/javascript"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="layout.xhtml">
+            <ui:define name="content"> 
+                <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-2,ui-grid-col-1, ui-grid-col-10"  >
+                    <p:outputPanel>
+                        <div id="frameNumber"></div>
+                        <p:panelGrid columns="3"  layout="grid" styleClass="ui-panelgrid-blank" >
+                            <!--<p:commandButton value="&lt;&lt;" onclick="showBack();"/>-->
+                            <!--<p:commandButton value="Auto" onclick="toggleAuto();" id="autoButton"/>-->
+                            <!--<p:commandButton value="&gt;&gt;" onclick="showNext();"/>-->
+                            <p:outputPanel>
+                                <button onclick="showBack()">&lt;&lt;</button></p:outputPanel>
+                            <p:outputPanel>
+                                <button id="autoButton" onclick="toggleAuto()">Auto</button>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <button onclick="showNext()">&gt;&gt;</button>
+                            </p:outputPanel>
+                        </p:panelGrid>
+                        <!--  CONTROl -->
+                        <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                            <p:outputLabel value="Speed" />
+                            <p:panelGrid columns="3"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                <p:outputPanel><input type="radio" name="speed" id="speed_slow" onclick="changeSpeed();" value="Slow" >S</input></p:outputPanel>
+                                <p:outputPanel><input type="radio" name="speed" id="speed_med" onclick="changeSpeed();" value="Medium" >M</input></p:outputPanel>
+                                <p:outputPanel><input type="radio" name="speed" id="speed_fast" onclick="changeSpeed();" value="Fast" >F</input></p:outputPanel>
+                            </p:panelGrid>
+                        </p:panelGrid>
+
+                        <!--  SELECT PROCESSED -->
+
+                        <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                            <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                <p:outputLabel value="Processed data" />
+                                <p:selectOneMenu widgetVar="grdhSelect" value="#{TiffAnimation.selectedGRDH}" effect="fold" editable="false" onchange="selectGRDH();">
+                                    <f:selectItem itemLabel="Select One" itemValue="" />
+                                    <f:selectItems value="#{TiffAnimation.listOfGRDH}" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+
+                            <!-- COLOR COMPOSITE -->
+                            <hr />
+                            <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                <p:outputLabel value="Color composite data" />
+                                <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                    <p:outputLabel value="R: " />
+                                    <p:selectOneMenu  value="#{TiffAnimation.selectedGRDH}" effect="fold" editable="false" >
+                                        <f:selectItem itemLabel="Select One" itemValue="" />
+                                        <f:selectItems value="#{TiffAnimation.listOfGRDH}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                    <p:outputLabel value="G: " />
+                                    <p:selectOneMenu  value="#{TiffAnimation.selectedGRDH}" effect="fold" editable="false" >
+                                        <f:selectItem itemLabel="Select One" itemValue="" />
+                                        <f:selectItems value="#{TiffAnimation.listOfGRDH}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="2"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                    <p:outputLabel value="B: " />
+                                    <p:selectOneMenu  value="#{TiffAnimation.selectedGRDH}" effect="fold" editable="false">
+                                        <f:selectItem itemLabel="Select One" itemValue="" />
+                                        <f:selectItems value="#{TiffAnimation.listOfGRDH}" />
+                                    </p:selectOneMenu>
+                                </p:panelGrid>
+                                <p:commandButton value="Composite" onclick="showComposite();" />
+                            </p:panelGrid>
+
+                            <hr />
+                            <!-- Products -->
+                            <p:outputLabel value="Products" />
+                            <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+                                <p:outputLabel value="Water body" />
+                                <p:selectOneMenu widgetVar="waterbodySelect" value="#{TiffAnimation.selectedGRDH}" effect="fold" editable="false" onchange="clickWaterBody();">
+                                    <f:selectItem itemLabel="Select One" itemValue="" />
+                                    <f:selectItems value="#{TiffAnimation.listWaterBody}" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+
+                            <p:panelGrid columns="1"  layout="grid" styleClass="ui-panelgrid-blank" >
+
+
+
+                                <p:outputPanel><input type="radio" name="data" id="processed_data" onclick="#" value="1" >Processed data</input></p:outputPanel>
+                                <p:outputPanel><input type="radio" name="data" id="colored_data" onclick="#" value="2" >Color composite</input></p:outputPanel>
+                                <p:outputPanel><input type="radio" name="data" id="water_data" onclick="#" value="3" >Water body</input></p:outputPanel>
+                                <p:outputPanel><input type="radio" name="data" id="flood_data" onclick="#" value="4" >Flood</input></p:outputPanel>
+                            </p:panelGrid>
+                        </p:panelGrid>
+
+
+
+
+                    </p:outputPanel>
+
+                    <div  style="position: relative; top: 50px; left: 50px;">
+                        <!-- Create a canvas for Web World Wind. -->
+                        <canvas id="canvasOne" width="1000" height="550">
+                            Your browser does not support HTML5 Canvas.
+                        </canvas>
+                    </div>
+                </p:panelGrid>
+                <script>
+
+                            var wwd = new WorldWind.WorldWindow("canvasOne");
+
+                    // Add some image layers to the World Window's globe.
+                    wwd.addLayer(new WorldWind.BMNGOneImageLayer());
+                    wwd.addLayer(new WorldWind.BingAerialWithLabelsLayer());
+
+                    // Add a compass, a coordinates display and some view controls to the World Window.
+                    wwd.addLayer(new WorldWind.CompassLayer());
+                    wwd.addLayer(new WorldWind.CoordinatesDisplayLayer(wwd));
+                    wwd.addLayer(new WorldWind.ViewControlsLayer(wwd));
+
+                    // Create a layer manager for controlling layer visibility.
+//                    var layerManger = new LayerManager(wwd);
+
+                    var tiffsString = "#{TiffAnimation.listOfTiff}";
+                    console.log("List of file: " + tiffsString);
+                    var tiffs = tiffsString.split(",");
+//
+                    var geotiffObjects = [];
+//                    var geotiffLayers = [];
+                    wwd.redraw();
+                    wwd.goTo(new WorldWind.Position(10.3033320, 105.6798860, 145000));
+
+                    var currentIndex = 0;
+
+                    var geotiffLayer;
+                    function showFrame(tiffURL) {
+//                        document.getElementById('frameNumber').innerHTML = "Frame: " + currentIndex + "/" + (tiffs.length - 1);
+//                        var tiffURL = "# {TiffAnimation.endpoint}" + "data/spartacus_trans/" + tiffs[currentIndex];
+
+//                        tiffURL = "http://localhost:8080/FloodDataHarmonization-1.0/data/flood/qlook_100m/GRDH_Mosaicing_WATER/ogr/S1A_IW_GRDH_1SDV_20160222T224459_20160222T224524_010065_00ED2B_4A78.zip_Sigma0_VH_tc_10_mosaic.tiff";
+                        console.log("Load tiff: " + tiffURL);
+                        var aGeotiffObject = new WorldWind.GeoTiffReader(tiffURL);
+                        geotiffObjects.push(aGeotiffObject);
+
+                        aGeotiffObject.readAsImage(function (canvas) {
+                            var surfaceGeoTiff = new WorldWind.SurfaceImage(
+                                    aGeotiffObject.metadata.bbox,
+                                    new WorldWind.ImageSource(canvas)
+                                    );
+                            wwd.removeLayer(geotiffLayer); // remove last layer
+                            geotiffLayer = new WorldWind.RenderableLayer("GeoTiff");
+                            geotiffLayer.addRenderable(surfaceGeoTiff);
+                            wwd.addLayer(geotiffLayer);
+                            wwd.redraw();
+                        });
+
+                        wwd.redraw();
+                    }
+
+                    function showNext() {
+                        currentIndex = ++currentIndex % tiffs.length;
+                        showFrame();
+                    }
+
+                    function showBack() {
+                        if (currentIndex === 0) {
+                            currentIndex = tiffs.length + 1;
+                        }
+                        currentIndex = --currentIndex % tiffs.length;
+                        showFrame();
+                    }
+
+                    var interval;
+                    var isAutomatic = false;
+                    var speed = 2000;
+
+                    function toggleAuto() {
+                        if (isAutomatic === true) {
+                            console.log("Auto is clicked. isAutomatic is: " + isAutomatic);
+                            if (interval !== null) {
+                                clearInterval(interval);
+                                isAutomatic = false;
+                            }
+                            document.getElementById('autoButton').innerHTML = "Auto";
+                        } else {
+                            console.log("Auto is clicked. isAutomatic is: " + isAutomatic);
+                            isAutomatic = true;
+                            interval = setInterval(function () {
+                                showNext();
+                            }, speed);
+                            document.getElementById('autoButton').innerHTML = "Stop";
+                        }
+                        console.log("Auto is over. isAutomatic is: " + isAutomatic);
+                    }
+
+                    function changeSpeed() {
+
+                        if (document.getElementById('speed_slow').checked) {
+                            speed = 3000;
+                        } else if (document.getElementById('speed_med').checked) {
+                            speed = 1500;
+                        } else if (document.getElementById('speed_fast').checked) {
+                            speed = 300;
+                        }
+                        if (isAutomatic === true) {
+                            clearInterval(interval);
+                            interval = setInterval(function () {
+                                showNext();
+                            }, speed);
+                        }
+                    }
+
+                    // FLOOD
+                    function selectGRDH() {
+                        var tiffFile = PF('grdhSelect').getSelectedValue();
+                        console.log("GRDH selected: " + tiffFile)
+                        var tiffURL = "#{TiffAnimation.endpoint}" + "data/flood/qlook_100m/GRDH_Mosaicing/" + tiffFile;
+                        console.log("selectGRDH URL: " + tiffURL);
+                        showFrame(tiffURL);
+                    }
+
+                    // FLOOD
+                    function showComposite() {
+                        var tiffURL = "#{TiffAnimation.endpoint}" + "data/flood/qlook_100m/GRDH_Mosaicing_FALSE_COLOR_COMPOSITE/R_20160105_G_20160117_B_20160110.tiff";
+                        console.log("showComposite URL: " + tiffURL);
+                        showFrame(tiffURL);
+                    }
+
+                    function clickWaterBody() {
+                        var tiffFile = PF('waterbodySelect').getSelectedValue();
+                        var tiffURL = "#{TiffAnimation.endpoint}" + "data/flood/qlook_100m/GRDH_Mosaicing_WATER/org/" + tiffFile;
+                        console.log("selectWaterbody URL: " + tiffURL);
+                        showFrame(tiffURL);
+                    }
+
+                </script>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.0">
+<Document>
+<open>1</open>
+  <Folder>
+    <name>Thumbnails</name>
+  <GroundOverlay>
+    <name>phase</name>
+    <Icon>
+    <href>phase.png</href>
+    </Icon>
+    <LatLonBox>
+      <north>47.397222</north>
+      <south>45.550278</south>
+      <east>15.208056</east>
+      <west>11.619444</west>
+      <rotation>0</rotation>
+    </LatLonBox>
+  </GroundOverlay>
+  </Folder>
+  <Folder>
+    <name>Footprints</name>
+    <Style id="footprintStyle0">
+      <LineStyle>
+        <color>FF0000FF</color>
+        <width>3.0000000</width>
+      </LineStyle>
+    </Style>
+    <Placemark>
+      <name>phase</name>
+      <styleUrl>#footprintStyle0</styleUrl>
+      <Polygon>
+        <tesselate>1</tesselate>
+        <altitudeMode>clampToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+          11.619444,47.397222
+          15.208056,47.397222
+          15.208056,45.550278
+          11.619444,45.550278
+          11.619444,47.397222
+              11.619444,47.397222
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Folder>
+    <Style id="solarStyle">
+      <LineStyle>
+        <color>FF00DDDD</color>
+        <width>3.0000000</width>
+      </LineStyle>
+    </Style>
+    <Style id="sensorStyle0">
+      <LineStyle>
+        <color>FF0000FF</color>
+        <width>3.0000000</width>
+      </LineStyle>
+    </Style>
+  <Folder>
+    <name>Geometry Stubs</name>
+  </Folder>
+</Document>
+</kml>
